@@ -184,6 +184,19 @@ After every mutation:
 
 ---
 
+## Backend Protocol/API/Tooling Mini Summary
+
+- Client-server contract: client knows API shape, not backend internals.
+- HTTP method = intent, URL = resource (`/users`, `/users/:id`).
+- Use noun + plural naming; avoid verb-style URLs like `/getUser`.
+- Keep response structure consistent (success/data and error/code/message).
+- Check status code families fast: 2xx success, 4xx client error, 5xx server error.
+- Postman base flow: method -> URL -> headers -> body -> send -> verify status/body/time.
+- NestJS mindset: framework controls flow (IoC), controllers map HTTP, services decide logic.
+- Full chapter reference: [09-backend-fundamentals-http-rest-postman-nestjs.md](09-backend-fundamentals-http-rest-postman-nestjs.md)
+
+---
+
 ## Key Takeaways
 
 - Keep controller thin, service responsible.

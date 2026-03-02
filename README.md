@@ -9,6 +9,10 @@ Quick notes for no-AI quiz conditions: concise, practical, and easy to scan.
 - JSON read/parse/mutate/write flow
 - 400 vs 404 error logic
 - PUT replace vs PATCH merge
+- Backend fundamentals (protocol -> API design -> tooling)
+- HTTP/REST resource design and status code usage
+- Postman basics and NestJS framework/IoC concepts
+- UML class diagrams, interface-first design, and composition basics
 
 ## Fast Navigation
 
@@ -20,8 +24,10 @@ Quick notes for no-AI quiz conditions: concise, practical, and easy to scan.
 6. Timed practice + answer key -> [06-mock-quiz-and-solutions.md](06-mock-quiz-and-solutions.md)
 7. Copy-and-tweak templates -> [07-adaptable-snippets.md](07-adaptable-snippets.md)
 8. Last-minute summary -> [08-one-page-cheat-sheet.md](08-one-page-cheat-sheet.md)
+9. Backend protocol/API/tooling fundamentals -> [09-backend-fundamentals-http-rest-postman-nestjs.md](09-backend-fundamentals-http-rest-postman-nestjs.md)
+10. UML/interface/composition fundamentals -> [10-uml-interface-design-composition.md](10-uml-interface-design-composition.md)
 
-## Study Path (S0 -> S8)
+## Study Path (S0 -> S10)
 
 1. [00-roadmap.md](00-roadmap.md) — S0 roadmap
 2. [01-crud-patterns.md](01-crud-patterns.md) — S1 CRUD basics
@@ -32,7 +38,9 @@ Quick notes for no-AI quiz conditions: concise, practical, and easy to scan.
 7. [06-mock-quiz-and-solutions.md](06-mock-quiz-and-solutions.md) — S6 timed practice
 8. [07-adaptable-snippets.md](07-adaptable-snippets.md) — S7 adaptable templates
 9. [08-one-page-cheat-sheet.md](08-one-page-cheat-sheet.md) — S8 final review
-10. [.vscode/nestjs-quiz.code-snippets](.vscode/nestjs-quiz.code-snippets) — local snippet triggers
+10. [09-backend-fundamentals-http-rest-postman-nestjs.md](09-backend-fundamentals-http-rest-postman-nestjs.md) — S9 backend protocol/API/tooling
+11. [10-uml-interface-design-composition.md](10-uml-interface-design-composition.md) — S10 UML/interface/composition
+12. [.vscode/nestjs-quiz.code-snippets](.vscode/nestjs-quiz.code-snippets) — local snippet triggers
 
 ## Exam Rules to Remember
 
