@@ -1,70 +1,90 @@
-# 00 — Roadmap (15 / 30 / 60 Minutes)
+# **S0 — Study Roadmap (When You Feel Lost)**
 
-Use this page to decide what to do based on remaining time.
+### Overview
 
-## 15 Minutes (Survival Mode)
+This session is your reset plan when you feel confused.
 
-Goal: avoid major scoring mistakes.
+Main goals:
 
-Memorize these 4 blocks:
+- know what to study first
+- avoid high-score mistakes
+- finish one working CRUD resource in quiz style
 
-1. CRUD routes
-   - GET /items
-   - GET /items/:id
-   - POST /items
-   - PUT /items/:id
-   - PATCH /items/:id
-   - DELETE /items/:id
-2. Split of responsibility
-   - Controller = HTTP mapping
-   - Service = logic + data operations
-3. Data flow
-   - read → parse → mutate → stringify → write
-4. Error rule
-   - invalid input shape/value → 400
-   - resource id not found → 404
+---
 
-### 2-Minute Recall Drill
+## Mental Model
 
-Ask yourself quickly:
+Do not study everything at once.
+Study in layers:
 
-- If id is abc, what status? (400)
-- If id is 5 but record 5 does not exist, what status? (404)
-- Which method replaces full object? (PUT)
-- Which method merges partial fields? (PATCH)
+1. route shape
+2. controller/service split
+3. JSON data flow
+4. status code logic (400 vs 404)
+
+If one layer is weak, fix only that layer first.
+
+---
+
+## 15 Minutes (Emergency Mode)
+
+Read only:
+
+1. [08-one-page-cheat-sheet.md](08-one-page-cheat-sheet.md)
+2. [01-crud-patterns.md](01-crud-patterns.md)
+3. [04-error-handling-checklist.md](04-error-handling-checklist.md)
+
+Must-know rules:
+
+- PUT replaces, PATCH merges
+- invalid input -> 400
+- missing resource -> 404
+
+---
 
 ## 30 Minutes (Pass Mode)
 
-Read in this order:
+Read in order:
 
 1. [01-crud-patterns.md](01-crud-patterns.md)
 2. [02-controller-service-separation.md](02-controller-service-separation.md)
-3. [04-error-handling-checklist.md](04-error-handling-checklist.md)
+3. [03-file-json-recipes.md](03-file-json-recipes.md)
+4. [04-error-handling-checklist.md](04-error-handling-checklist.md)
 
-Then do one mini build:
+Then build one mini resource:
 
-- resource: students
+- students
 - fields: id, name, year, major
-- endpoints: all 6 CRUD routes
-- storage: students.json
+- all 6 CRUD routes
+
+---
 
 ## 60 Minutes (Confident Mode)
 
-1. Read all files once.
-2. Do a timed mock in [06-mock-quiz-and-solutions.md](06-mock-quiz-and-solutions.md).
-3. Verify this checklist:
-   - routes are callable
-   - PUT behavior is correct
-   - PATCH behavior is correct
-   - 400/404 behavior is correct
-   - writes are persisted
+1. Read all S files once.
+2. Do [06-mock-quiz-and-solutions.md](06-mock-quiz-and-solutions.md) timed.
+3. Verify:
+   - routes callable
+   - PUT/PATCH correct
+   - 400/404 correct
+   - writes persisted
 
-## No-AI Quiz Workflow (Open Resources)
+---
 
-When coding during exam:
+## When Coding During Quiz
 
-1. Open [01-crud-patterns.md](01-crud-patterns.md) and scaffold routes first.
-2. Open [03-file-json-recipes.md](03-file-json-recipes.md) and wire helpers.
-3. Open [04-error-handling-checklist.md](04-error-handling-checklist.md) and verify statuses.
-4. If behavior is wrong, open [05-common-bugs-quick-fix.md](05-common-bugs-quick-fix.md).
-5. For fast templating, use [07-adaptable-snippets.md](07-adaptable-snippets.md) and local snippet prefixes in [.vscode/nestjs-quiz.code-snippets](.vscode/nestjs-quiz.code-snippets).
+Open in this order when stuck:
+
+1. [01-crud-patterns.md](01-crud-patterns.md)
+2. [03-file-json-recipes.md](03-file-json-recipes.md)
+3. [04-error-handling-checklist.md](04-error-handling-checklist.md)
+4. [05-common-bugs-quick-fix.md](05-common-bugs-quick-fix.md)
+5. [07-adaptable-snippets.md](07-adaptable-snippets.md)
+
+---
+
+## Key Takeaways
+
+- Learn layers, not random snippets.
+- Route and status-code mistakes lose marks fastest.
+- One clean resource pattern can be reused everywhere.

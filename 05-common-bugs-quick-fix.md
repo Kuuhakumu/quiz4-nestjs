@@ -1,10 +1,12 @@
-# 05 — Common Bugs Quick Fix
+# **S5 — Common Bugs Quick Fix**
 
-Use this file when output is wrong and you need fast recovery.
+### Overview
 
-## Symptom → Cause → Fix
+Use symptom -> cause -> fix when behavior is wrong and time is short.
 
-### 1) GET /items/:id always fails
+---
+
+## 1) GET /:id always fails
 
 - Cause: id stayed string
 - Fix:
@@ -14,34 +16,34 @@ const numericId = Number(id);
 if (Number.isNaN(numericId)) throw new BadRequestException('id must be a number');
 ```
 
-### 2) PUT behaves like PATCH
+## 2) PUT behaves like PATCH
 
-- Cause: PUT used merge logic
+- Cause: merge logic used in PUT
 - Fix:
 
 ```ts
 data[index] = { id, ...body };
 ```
 
-### 3) PATCH removes old fields
+## 3) PATCH deletes old fields
 
-- Cause: PATCH used replacement logic
+- Cause: replace logic used in PATCH
 - Fix:
 
 ```ts
 data[index] = { ...data[index], ...body, id };
 ```
 
-### 4) PATCH changed id accidentally
+## 4) PATCH changed id
 
-- Cause: body.id overrides path id
-- Fix: always place id at end of merged object
+- Cause: body.id overrode route id
+- Fix: keep id last in merge object
 
 ```ts
 data[index] = { ...data[index], ...body, id };
 ```
 
-### 5) New data not saved after request
+## 5) Data not saved
 
 - Cause: missing await on write
 - Fix:
@@ -50,14 +52,9 @@ data[index] = { ...data[index], ...body, id };
 await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
 ```
 
-### 6) App crashes on first run
+## 6) DELETE says success but row remains
 
-- Cause: missing fallback for file not found
-- Fix: create [] in catch branch and return empty array.
-
-### 7) DELETE returns success but row still exists
-
-- Cause: filtered/spliced result was not written back
+- Cause: mutation not persisted
 - Fix:
 
 ```ts
@@ -65,18 +62,20 @@ const next = data.filter((x) => x.id !== id);
 await writeData(next);
 ```
 
-### 8) Wrong status code returned
-
-- Cause: mixed 400 and 404 logic
-- Fix:
-  - invalid id format → 400
-  - valid id but not found → 404
+---
 
 ## 20-Second Debug Checklist
 
-1. Is id parsed with Number and validated?
-2. Is exception type correct for this failure?
-3. PUT replace and PATCH merge implemented correctly?
-4. Are all write operations awaited?
-5. Is data written after every mutation?
-6. Is id from path preserved during updates?
+1. id parsed and validated?
+2. Correct exception type (400 vs 404)?
+3. PUT replace and PATCH merge are different?
+4. Every write awaited?
+5. Route id preserved during updates?
+
+---
+
+## Key Takeaways
+
+- Most quiz bugs are small consistency mistakes.
+- Check id parsing, status codes, and write persistence first.
+- Keep this page open while debugging under time pressure.

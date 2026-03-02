@@ -1,16 +1,27 @@
-# 03 — Read & Write JSON Recipes
+# **S3 — JSON File Recipes: Read, Update, Save Safely**
 
-Use this file when the quiz requires local JSON storage (no database).
+### Overview
 
-## Standard Data Flow
+This session gives a practical CRUD recipe when storage is a local JSON file.
 
-1. Read file text
-2. Parse JSON text to array/object
-3. Apply your CRUD change
-4. Convert data back to JSON string
-5. Write to file
+Core rule:
+read -> parse -> mutate -> stringify -> write
 
-If one step is skipped, behavior often looks correct in memory but fails in final output.
+---
+
+## Mental Model
+
+Treat JSON updates like a fixed pipeline:
+
+1. load current file text
+2. convert text to JS data
+3. change data in memory
+4. convert back to JSON text
+5. save to file
+
+If you skip the final write step, data is not really saved.
+
+---
 
 ## Reusable Helper Pattern
 
@@ -19,7 +30,6 @@ import { promises as fs } from 'fs';
 import { join } from 'path';
 
 type Item = { id: number; name: string; year?: number; major?: string };
-
 const filePath = join(process.cwd(), 'items.json');
 
 async function readData(): Promise<Item[]> {
@@ -37,61 +47,55 @@ async function writeData(data: Item[]): Promise<void> {
 }
 ```
 
-### Code Explanation
+### Why each part matters
 
-- join(process.cwd(), 'items.json') keeps file path stable from project root.
-- readFile(..., 'utf-8') returns a string so JSON.parse can parse it.
-- catch branch creates an empty file for first run and returns empty array.
-- JSON.stringify(data, null, 2) creates readable JSON formatting.
-- await on write is required so request does not finish before save completes.
+- readData: always returns array shape
+- catch branch: handles first-run missing file
+- writeData: persists state, not just memory changes
+- await write: prevents silent save failures
 
-## ID Generation
+---
+
+## ID Generation Pattern
 
 ```ts
 const nextId = data.length ? Math.max(...data.map((x) => x.id)) + 1 : 1;
 ```
 
-Why it works:
+- existing rows -> max + 1
+- empty array -> 1
 
-- If data has rows, next id is max id + 1.
-- If data is empty, first id is 1.
+---
 
-## PUT and PATCH with JSON Data
+## PUT vs PATCH in JSON Data
 
 ```ts
-// PUT: replace object using request snapshot
+// PUT: replace object
 data[index] = { id, ...body };
 
-// PATCH: merge only provided fields
+// PATCH: merge provided fields
 data[index] = { ...data[index], ...body, id };
 ```
 
-Important:
+Keep route id authoritative.
 
-- Keep id from path as source of truth.
-- Do not allow PATCH body to change id.
+---
 
-## Invalid JSON Decision (Quiz-Safe)
+## Error Rules You Must Keep
 
-If read fails, different classes may expect different behavior:
+```ts
+if (Number.isNaN(id)) throw new BadRequestException('id must be a number');
+if (index === -1) throw new NotFoundException('Item not found');
+```
 
-- Beginner quiz mode: create [] and continue.
-- Strict correctness mode: throw error for malformed JSON.
+- invalid input -> 400
+- missing id -> 404
 
-Follow your instructor pattern. If unsure, use course examples from previous tasks.
+---
 
-## Edge Cases to Handle
+## Key Takeaways
 
-- File missing on first run
-- id is not a number
-- id does not exist
-- required fields missing in POST/PUT
-- missing await on write operation
-
-## Quick Verify Steps
-
-1. Create one row
-2. Restart app
-3. GET all should still include that row
-4. Update and delete one row
-5. Confirm file content actually changed
+- Use one fixed JSON pipeline every time.
+- Always await write operations.
+- PUT and PATCH must not behave the same.
+- Keep status code logic consistent.
