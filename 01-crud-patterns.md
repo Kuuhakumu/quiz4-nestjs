@@ -1,19 +1,88 @@
-# 01 — CRUD API Patterns
+# **S1 — CRUD API Basics: Routes, Meaning, and Flow**
 
-Use this file as your route contract during quiz.
+### Overview
 
-## Route Table
+This session explains CRUD in the most practical way for quiz exams.
 
-| Method | Path | Purpose |
+We focus on:
+
+- what each route means
+- how to read method + path
+- how controller methods map to routes
+- why `PUT` and `PATCH` are different
+
+We focus on understanding first, not memorizing blindly.
+
+**Out of scope**
+
+- Advanced decorators and pipes
+- Authentication and guards
+
+---
+
+## Mental Model First (Very Important)
+
+Think of an API as a **menu of actions** for one resource.
+
+If your resource is `items`, your API must answer:
+
+- How to see all items?
+- How to see one item?
+- How to create one item?
+- How to update one item?
+- How to delete one item?
+
+CRUD is just these 5 ideas:
+
+- **C**reate
+- **R**ead
+- **U**pdate
+- **D**elete
+
+---
+
+## How to Read a Route (This is usually where confusion starts)
+
+Each endpoint has 2 parts:
+
+1. **Method** (GET, POST, PUT, PATCH, DELETE)
+2. **Path** (`/items`, `/items/:id`)
+
+Example:
+
+- `GET /items/:id`
+  - `GET` = read data
+  - `/items/:id` = one specific row by id
+
+`:id` means a variable value from URL.
+
+So if request is `/items/15`, then `id = 15`.
+
+---
+
+## CRUD Route Table (Core Contract)
+
+| Method | Path | Meaning |
 |---|---|---|
-| GET | /items | list all |
-| GET | /items/:id | get one by id |
-| POST | /items | create new |
-| PUT | /items/:id | replace full object |
-| PATCH | /items/:id | update partial fields |
-| DELETE | /items/:id | remove by id |
+| GET | /items | read all rows |
+| GET | /items/:id | read one row |
+| POST | /items | create one row |
+| PUT | /items/:id | replace one row |
+| PATCH | /items/:id | partially update one row |
+| DELETE | /items/:id | delete one row |
 
-## Controller Skeleton
+### Human-language translation
+
+- `GET /items` → "show me all items"
+- `GET /items/3` → "show me item with id 3"
+- `POST /items` → "create new item from body"
+- `PUT /items/3` → "replace item 3 with new snapshot"
+- `PATCH /items/3` → "change only some fields in item 3"
+- `DELETE /items/3` → "remove item 3"
+
+---
+
+## Controller Skeleton (Route Mapping Layer)
 
 ```ts
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
@@ -55,44 +124,55 @@ export class ItemsController {
 }
 ```
 
-Why this shape works:
+### Code explanation
 
-- Controller does routing only.
-- id is parsed once from string to number.
-- Service method names stay consistent with CRUD actions.
+- `@Controller('items')` sets base path.
+- `@Get()`, `@Post()`, etc. map HTTP method + path.
+- `@Param('id')` reads `id` from URL.
+- `Number(id)` converts URL text to number.
+- Controller forwards work to service.
 
-## Service Method Contract
+If this feels repetitive, that is normal. CRUD controllers are intentionally repetitive.
 
-- findAll()
-- findOne(id: number)
-- create(dto)
-- update(id, dto) for PUT
-- patch(id, dto) for PATCH
-- remove(id)
+---
 
-## PUT vs PATCH (Most Important Rule)
+## Service Method Contract (Keep names stable)
 
-- PUT: full replacement semantics.
-- PATCH: partial merge semantics.
+- `findAll()`
+- `findOne(id: number)`
+- `create(dto)`
+- `update(id, dto)`
+- `patch(id, dto)`
+- `remove(id)`
 
-### Before/After Example
+These names help you map controller methods quickly during exams.
 
-Existing item:
+---
+
+## PUT vs PATCH (Most Scored Topic)
+
+### PUT = replace
+
+You are sending a new full snapshot of the row.
+
+```ts
+data[index] = { id, ...body };
+```
+
+### PATCH = merge
+
+You are changing only sent fields.
+
+```ts
+data[index] = { ...data[index], ...body, id };
+```
+
+### Quick before/after
+
+Existing row:
 
 ```json
 { "id": 10, "name": "Math", "credit": 3, "instructor": "Lee" }
-```
-
-PUT body:
-
-```json
-{ "name": "Advanced Math", "credit": 4, "instructor": "Kim" }
-```
-
-PUT result (replace):
-
-```json
-{ "id": 10, "name": "Advanced Math", "credit": 4, "instructor": "Kim" }
 ```
 
 PATCH body:
@@ -101,22 +181,28 @@ PATCH body:
 { "credit": 2 }
 ```
 
-PATCH result (merge):
+After PATCH:
 
 ```json
 { "id": 10, "name": "Math", "credit": 2, "instructor": "Lee" }
 ```
 
-## Prompt-Check Rule for PUT
+---
 
-Some quizzes require strict full-field PUT, some do not.
+## Fast Exam Checklist
 
-- If prompt says full update or all required fields: validate all required fields in PUT.
-- If prompt is silent: still implement replace semantics, and follow instructor examples.
+1. Route method and path correct?
+2. `:id` parsed and validated?
+3. `PUT` replace and `PATCH` merge are different?
+4. Missing row returns 404?
+5. Invalid id/invalid input returns 400?
 
-## Common Scoring Points
+---
 
-- Correct route + method mapping
-- Correct id parse and validation
-- Correct PUT/PATCH behavior difference
-- Correct 400/404 exceptions
+## Key Takeaways
+
+- Route = method + path.
+- CRUD is a fixed contract you can memorize once.
+- Controller maps requests; service does logic.
+- `PUT` and `PATCH` must not behave the same.
+- Understanding route meaning is more important than memorizing syntax.
